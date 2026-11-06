@@ -1,0 +1,45 @@
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .print-toolbar {
+    display: none !important;
+  }
+
+  .print-document {
+    box-shadow: none !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+.print-document {
+  color: #111214;
+  background: #ffffff;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.print-table th,
+.print-table td {
+  border-bottom: 1px solid #e5ddd4;
+  padding: 8px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.print-table th {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b5a4d;
+}
+
+.print-table td {
+  font-size: 12px;
+}
