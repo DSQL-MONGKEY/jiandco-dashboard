@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { ExpensesView } from '@/features/accounting/components/expenses-view';
 
 export const metadata = {
-  title: 'Expenses'
+  title: 'Expenses',
+  description: 'Record and review Ji&Co operational expenses.'
 };
 
 export default function ExpensesPage() {

@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { CustomersView } from '@/features/customers/components/customers-view';
 
 export const metadata = {
-  title: 'Customers'
+  title: 'Customers',
+  description: 'Manage Ji&Co customer and shipping information.'
 };
 
 export default function CustomersPage() {

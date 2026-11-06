@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { OrderForm } from '@/features/orders/components/order-form';
 
 export const metadata = {
-  title: 'Create Order'
+  title: 'Create Order',
+  description: 'Create a new Ji&Co customer order.'
 };
 
 export default function NewOrderPage() {

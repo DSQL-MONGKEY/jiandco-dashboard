@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { ProductEditView } from '@/features/products/components/product-edit-view';
 
 export const metadata = {
-  title: 'Product Detail'
+  title: 'Product Detail',
+  description: 'Manage Ji&Co product details, variants, images, and stock.'
 };
 
 type PageProps = {

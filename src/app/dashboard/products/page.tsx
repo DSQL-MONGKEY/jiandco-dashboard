@@ -7,7 +7,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { ProductList } from '@/features/products/components/product-list';
 
 export const metadata = {
-  title: 'Products'
+  title: 'Products',
+  description: 'Manage Ji&Co products, variants, images, and stock.'
 };
 
 export default function ProductsPage() {

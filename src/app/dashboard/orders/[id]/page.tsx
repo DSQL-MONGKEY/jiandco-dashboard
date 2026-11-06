@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { OrderDetailView } from '@/features/orders/components/order-detail-view';
 
 export const metadata = {
-  title: 'Order Detail'
+  title: 'Order Detail',
+  description: 'Review and update Ji&Co order details.'
 };
 
 type PageProps = {

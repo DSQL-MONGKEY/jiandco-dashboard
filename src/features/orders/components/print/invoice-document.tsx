@@ -27,6 +27,9 @@ export function InvoicePrintView({ orderId }: { orderId: string }) {
             <BrandLogo size={52} />
             <div>
               <h1 className='text-2xl font-semibold tracking-tight'>{brand.name}</h1>
+              <p className='text-[10px] font-semibold tracking-[0.12em] text-neutral-500 uppercase'>
+                {brand.companyName}
+              </p>
               <p className='text-xs text-neutral-500'>{brand.tagline}</p>
             </div>
           </div>
@@ -124,7 +127,7 @@ export function InvoicePrintView({ orderId }: { orderId: string }) {
             Courier: {order.courier || '-'} · Tracking: {order.tracking_number || '-'}
           </p>
           <p className='mt-4 text-[10px]'>
-            {brand.name} · {brand.address} · {brand.email}
+            {brand.name} is a brand of {brand.companyName} · {brand.address} · {brand.email}
           </p>
         </div>
       </div>

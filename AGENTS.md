@@ -2,7 +2,7 @@
 
 ## Project
 
-Jiandco internal dashboard for clothing operations. Frontend for the Jiandco Go API.
+Ji&Co internal dashboard for clothing operations, a brand of PT. Sadhika Cipta Mandiri. Frontend for the Jiandco Go API.
 
 ## Stack
 

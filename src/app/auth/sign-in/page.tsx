@@ -2,10 +2,11 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { BrandLogo } from '@/components/brand-logo';
+import { brand } from '@/config/brand';
 
 export const metadata: Metadata = {
-  title: 'Sign In | Jiandco Dashboard',
-  description: 'Sign in to the Jiandco internal operations dashboard.'
+  title: 'Sign In | Ji&Co Dashboard',
+  description: `Sign in to the Ji&Co internal dashboard, operated by ${brand.companyName}.`
 };
 
 export default function SignInPage() {
@@ -50,7 +51,7 @@ export default function SignInPage() {
 
         <div className='relative z-10 flex items-center justify-between gap-6 border-t border-[#EEE4DA]/15 pt-5 text-[0.55rem] font-semibold tracking-[0.18em] text-[#EEE4DA]/45 uppercase'>
           <span>Authorized personnel only</span>
-          <span>Ji&amp;Co · Indonesia</span>
+          <span>{brand.companyName} · Indonesia</span>
         </div>
       </section>
 
@@ -85,8 +86,8 @@ export default function SignInPage() {
           </div>
 
           <p className='mt-8 text-xs leading-6 text-[#6B5A4D]'>
-            Need access? Contact your administrator. This dashboard is for authorized Ji&amp;Co
-            personnel only.
+            Operated by {brand.companyName}. Authorized personnel only. Contact your administrator
+            if you need access.
           </p>
         </div>
       </section>

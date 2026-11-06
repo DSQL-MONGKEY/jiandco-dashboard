@@ -25,6 +25,7 @@ export function ReceiptPrintView({ orderId }: { orderId: string }) {
         <div className='flex flex-col items-center border-b border-dashed border-neutral-300 pb-3 text-center'>
           <BrandLogo size={42} />
           <p className='mt-1 text-sm font-semibold'>{brand.name}</p>
+          <p className='text-[9px] text-neutral-500'>{brand.companyName}</p>
           <p className='text-[9px] text-neutral-500'>{brand.address}</p>
           <p className='text-[9px] text-neutral-500'>{brand.phone}</p>
         </div>
@@ -88,9 +89,10 @@ export function ReceiptPrintView({ orderId }: { orderId: string }) {
           </div>
         </div>
 
-        <p className='mt-4 border-t border-dashed border-neutral-300 pt-3 text-center text-[10px] text-neutral-500'>
-          Terima kasih telah berbelanja di {brand.name}.
-        </p>
+        <div className='mt-4 border-t border-dashed border-neutral-300 pt-3 text-center text-[10px] text-neutral-500'>
+          <p>Terima kasih telah berbelanja di {brand.name}.</p>
+          <p className='mt-1'>Ji&Co is a brand of {brand.companyName}.</p>
+        </div>
       </div>
     </>
   );

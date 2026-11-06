@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { UsersView } from '@/features/users/components/users-view';
 
 export const metadata = {
-  title: 'Users'
+  title: 'Users',
+  description: 'Manage Ji&Co dashboard users and access.'
 };
 
 export default function UsersPage() {

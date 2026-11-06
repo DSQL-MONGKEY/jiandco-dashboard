@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { RevenueOverviewView } from '@/features/overview/components/revenue-overview-view';
 
 export const metadata = {
-  title: 'Overview'
+  title: 'Overview',
+  description: 'Review Ji&Co revenue, expenses, and order performance.'
 };
 
 export default function OverviewPage() {

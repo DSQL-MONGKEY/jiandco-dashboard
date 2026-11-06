@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/sidebar';
 import { UserAvatar } from '@/components/user-avatar';
 import { BrandLogo } from '@/components/brand-logo';
+import { brand } from '@/config/brand';
 import { navGroups } from '@/config/nav-config';
 import { useAuth } from '@/features/auth/context/auth-provider';
 import { useFilteredNavGroups } from '@/hooks/use-nav';
@@ -120,6 +121,9 @@ export default function AppSidebar() {
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
+        <p className='text-muted-foreground px-2 pb-2 text-[10px] leading-tight group-data-[collapsible=icon]:hidden'>
+          {brand.companyName}
+        </p>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

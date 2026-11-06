@@ -71,6 +71,8 @@ jobs:
           push: true
           build-args: |
             NEXT_PUBLIC_APP_URL=https://dash.jiandco.id
+            NEXT_PUBLIC_API_URL=https://api.jiandco.id
+            INTERNAL_API_URL=http://jiandco-api:8080
           tags: |
             ${{ env.IMAGE }}:${{ github.sha }}
             ${{ env.IMAGE }}:latest

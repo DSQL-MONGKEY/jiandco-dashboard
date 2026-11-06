@@ -1,6 +1,6 @@
-# Jiandco Dashboard
+# Ji&Co Dashboard
 
-Internal operations dashboard for Jiandco clothing, built with Next.js 16 and the Jiandco Go API.
+Internal operations dashboard for Ji&Co, a brand of PT. Sadhika Cipta Mandiri, built with Next.js 16 and the Jiandco Go API.
 
 ## Features
 
@@ -100,6 +100,10 @@ src/
 - [Deployment](docs/deployment.md)
 - [Forms](docs/forms.md)
 - [Themes](docs/themes.md)
+
+## SEO
+
+This is an internal dashboard. It is intentionally `noindex` via metadata, `robots.txt`, and `X-Robots-Tag`; a PWA manifest and brand icons are provided for installation.
 
 ## Notes
 

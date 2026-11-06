@@ -3,7 +3,8 @@ import { ProductForm } from '@/features/products/components/product-form';
 import { RequirePermission } from '@/features/auth/components/require-permission';
 
 export const metadata = {
-  title: 'New Product'
+  title: 'New Product',
+  description: 'Create a new Ji&Co catalog product.'
 };
 
 export default function NewProductPage() {

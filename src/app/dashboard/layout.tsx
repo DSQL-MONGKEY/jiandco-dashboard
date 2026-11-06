@@ -12,10 +12,11 @@ import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Jiandco Dashboard',
-  description: 'Internal operations dashboard for Jiandco clothing',
+  description: 'Internal operations dashboard for Ji&Co, operated by PT. Sadhika Cipta Mandiri.',
   robots: {
     index: false,
-    follow: false
+    follow: false,
+    nocache: true
   }
 };
 

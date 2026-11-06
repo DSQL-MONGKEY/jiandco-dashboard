@@ -3,7 +3,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { RolesView } from '@/features/roles/components/roles-view';
 
 export const metadata = {
-  title: 'Roles & Permissions'
+  title: 'Roles & Permissions',
+  description: 'Manage Ji&Co dashboard role permissions.'
 };
 
 export default function RolesPage() {

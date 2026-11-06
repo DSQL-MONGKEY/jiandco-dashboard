@@ -2,7 +2,8 @@ import PageContainer from '@/components/layout/page-container';
 import { ProfileView } from '@/features/profile/components/profile-view';
 
 export const metadata = {
-  title: 'Profile'
+  title: 'Profile',
+  description: 'Manage your Ji&Co dashboard account.'
 };
 
 export default function ProfilePage() {

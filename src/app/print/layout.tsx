@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import { brand } from '@/config/brand';
 import '@/styles/print.css';
 
 export const metadata: Metadata = {
-  title: 'Print | Jiandco',
-  robots: { index: false, follow: false }
+  title: 'Print | Ji&Co',
+  description: `Ji&Co invoice and receipt — ${brand.companyName}`,
+  robots: { index: false, follow: false, nocache: true }
 };
 
 export default function PrintLayout({ children }: { children: React.ReactNode }) {

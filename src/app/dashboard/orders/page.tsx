@@ -7,7 +7,8 @@ import { RequirePermission } from '@/features/auth/components/require-permission
 import { OrdersView } from '@/features/orders/components/orders-view';
 
 export const metadata = {
-  title: 'Orders'
+  title: 'Orders',
+  description: 'Track Ji&Co orders, payments, shipping, and stock.'
 };
 
 export default function OrdersPage() {
