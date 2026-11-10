@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import type { Formatter } from 'recharts/types/component/DefaultTooltipContent';
 import { currentMonth } from '@/lib/format';
 import { Money } from '@/components/money';
 import { overviewQueries } from '../api/queries';
@@ -28,6 +29,15 @@ const PIE_COLORS = [
   'var(--chart-4)',
   'var(--chart-5)',
   'var(--muted-foreground)'
+];
+
+const formatDailyTooltip: Formatter = (value, name) => [
+  name === 'orders' ? (
+    `${value} orders`
+  ) : (
+    <Money key='revenue' value={typeof value === 'number' ? value : 0} />
+  ),
+  name === 'orders' ? 'Orders' : 'Revenue'
 ];
 
 export function RevenueOverviewView() {
@@ -84,16 +94,7 @@ export function RevenueOverviewView() {
                   <CartesianGrid strokeDasharray='3 3' vertical={false} />
                   <XAxis dataKey='date' tickLine={false} axisLine={false} fontSize={12} />
                   <YAxis allowDecimals={false} tickLine={false} axisLine={false} fontSize={12} />
-                  <Tooltip
-                    formatter={(value, name) => [
-                      name === 'orders' ? (
-                        `${value} orders`
-                      ) : (
-                        <Money key='revenue' value={Number(value)} />
-                      ),
-                      name === 'orders' ? 'Orders' : 'Revenue'
-                    ]}
-                  />
+                  <Tooltip formatter={formatDailyTooltip} />
                   <Bar dataKey='orders' fill='var(--chart-1)' radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>

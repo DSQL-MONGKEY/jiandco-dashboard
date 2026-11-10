@@ -34,10 +34,10 @@ Lists:
 |---|---|
 | Auth | `/auth/login`, `/auth/refresh`, `/auth/logout`, `/auth/me`, `/auth/profile`, `/auth/password`, `/auth/avatar` |
 | Overview | `/overview/revenue` |
-| Products | `/products`, `/products/:id`, `/products/:id/variants`, `/products/:id/variants/:variantId/stock`, `/products/:id/variants/:variantId/movements`, `/products/:id/images` |
+| Products | `/products`, `/products/:id`, `/products/:id/colors`, `/products/:id/colors/:colorId/image`, `/products/:id/variants`, `/products/:id/variants/:variantId/stock`, `/products/:id/variants/:variantId/movements`, `/products/:id/images` |
 | Catalog settings | `/catalog/settings` |
 | Public catalog | `/public/catalog`, `/public/catalog/products/:slug`, `/public/media/*` |
-| Catalog | `/categories`, `/sizes`, `/colors` |
+| Catalog | `/categories`, `/sizes` |
 | Customers | `/customers` |
 | Orders | `/orders`, `/orders/:id`, `/orders/:id/items`, `/orders/:id/status`, `/orders/:id/payment`, `/orders/:id/shipping` |
 | Expenses | `/expenses`, `/expenses/:id`, `/expenses/:id/receipt` |

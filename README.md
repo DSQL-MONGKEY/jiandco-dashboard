@@ -7,7 +7,7 @@ Internal operations dashboard for Ji&Co, a brand of PT. Sadhika Cipta Mandiri, b
 - Self-managed auth via the Jiandco API: username/password login, JWT access token, rotating refresh token.
 - BFF auth: tokens live only in `httpOnly` cookies; the browser never sees raw tokens.
 - RBAC-aware navigation and page guards using backend `page.action` permissions.
-- Product catalog: products, variants, sizes, colors, categories, images, stock, and stock movement history. New products default to Active so they appear on the public catalog.
+- Product catalog: products, custom per-product colors with preview images, variants, sizes, categories, images, stock, and stock movement history. New products default to Active so they appear on the public catalog.
 - Orders: create orders, edit pending items, status/payment/shipping transitions, tracking number.
 - Customers: master data and shipping details.
 - Accounting: expenses with line items, receipts, and monthly overview.

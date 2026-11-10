@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { productQueries } from '../api/queries';
 import { ProductForm } from './product-form';
+import { ProductColorManager } from './product-color-manager';
 import { VariantManager } from './variant-manager';
 import { ImageManager } from './image-manager';
 
@@ -32,6 +33,7 @@ export function ProductEditView({ productId }: { productId: string }) {
   return (
     <div className='space-y-6'>
       <ProductForm initialData={product} />
+      <ProductColorManager product={product} />
       <VariantManager product={product} />
       <ImageManager product={product} />
     </div>

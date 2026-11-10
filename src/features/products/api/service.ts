@@ -8,6 +8,8 @@ import type {
   ColorPayload,
   Product,
   ProductFilters,
+  ProductColor,
+  ProductColorPayload,
   ProductImage,
   ProductPayload,
   ProductVariant,
@@ -53,6 +55,49 @@ export function updateProduct(id: string, payload: ProductPayload) {
 
 export function deleteProduct(id: string) {
   return apiClient<{ message: string }>(`/products/${id}`, { method: 'DELETE' });
+}
+
+export function getProductColors(productId: string) {
+  return apiClient<ProductColor[]>(`/products/${productId}/colors`);
+}
+
+export function createProductColor(productId: string, payload: ProductColorPayload) {
+  return apiClient<ProductColor>(`/products/${productId}/colors`, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+}
+
+export function updateProductColor(
+  productId: string,
+  colorId: string,
+  payload: ProductColorPayload
+) {
+  return apiClient<ProductColor>(`/products/${productId}/colors/${colorId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload)
+  });
+}
+
+export function deleteProductColor(productId: string, colorId: string) {
+  return apiClient<{ message: string }>(`/products/${productId}/colors/${colorId}`, {
+    method: 'DELETE'
+  });
+}
+
+export function uploadProductColorImage(productId: string, colorId: string, file: File) {
+  const formData = new FormData();
+  formData.append('image', file);
+  return apiClient<ProductColor>(`/products/${productId}/colors/${colorId}/image`, {
+    method: 'POST',
+    body: formData
+  });
+}
+
+export function deleteProductColorImage(productId: string, colorId: string) {
+  return apiClient<{ message: string }>(`/products/${productId}/colors/${colorId}/image`, {
+    method: 'DELETE'
+  });
 }
 
 export function uploadProductImages(productId: string, files: File[]) {

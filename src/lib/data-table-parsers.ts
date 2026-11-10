@@ -137,7 +137,7 @@ export function sortColumnFiltersBySearch<TFilter extends ColumnFilterItem>(
     if (!positions.has(key)) positions.set(key, positions.size);
   }
 
-  return [...filters].sort(
+  return [...filters].toSorted(
     (a, b) =>
       (positions.get(a.id) ?? Number.POSITIVE_INFINITY) -
       (positions.get(b.id) ?? Number.POSITIVE_INFINITY)
@@ -147,7 +147,7 @@ export function sortColumnFiltersBySearch<TFilter extends ColumnFilterItem>(
 export function getColumnFiltersKey(filters: ColumnFilterItem[]) {
   return filters
     .map((filter) => `${filter.id}=${serializeColumnFilter(filter)}`)
-    .sort()
+    .toSorted()
     .join('&');
 }
 

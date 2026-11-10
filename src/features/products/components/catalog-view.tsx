@@ -57,7 +57,6 @@ export function CatalogView() {
   const queryClient = useQueryClient();
   const { data: categories = [] } = useQuery(categoryQueries.list());
   const { data: sizes = [] } = useQuery(sizeQueries.list());
-  const { data: colors = [] } = useQuery(colorQueries.list());
   const [editTarget, setEditTarget] = useState<EditTarget>(null);
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null);
 
@@ -114,7 +113,6 @@ export function CatalogView() {
         <TabsList className='w-full justify-start overflow-x-auto sm:w-fit'>
           <TabsTrigger value='categories'>Categories</TabsTrigger>
           <TabsTrigger value='sizes'>Sizes</TabsTrigger>
-          <TabsTrigger value='colors'>Colors</TabsTrigger>
           <TabsTrigger value='settings'>Settings</TabsTrigger>
         </TabsList>
 
@@ -238,70 +236,6 @@ export function CatalogView() {
 
         <TabsContent value='settings'>
           <CatalogSettingsForm />
-        </TabsContent>
-
-        <TabsContent value='colors'>
-          <Card>
-            <CardHeader className='flex flex-row items-center justify-between'>
-              <CardTitle>Colors</CardTitle>
-              <Button size='sm' onClick={() => setEditTarget({ kind: 'color' })}>
-                <Icons.add className='mr-1 size-4' />
-                Add color
-              </Button>
-            </CardHeader>
-            <CardContent className='p-0'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Hex</TableHead>
-                    <TableHead className='w-24 text-right'>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {colors.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={3} className='text-muted-foreground h-20 text-center'>
-                        No colors.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                  {colors.map((color) => (
-                    <TableRow key={color.id}>
-                      <TableCell>{color.name}</TableCell>
-                      <TableCell>
-                        <div className='flex items-center gap-2'>
-                          <span
-                            className='size-4 rounded border'
-                            style={{ backgroundColor: color.hex_code || 'transparent' }}
-                          />
-                          <span className='font-mono text-xs'>{color.hex_code || '-'}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className='text-right'>
-                        <div className='flex justify-end gap-1'>
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            onClick={() => setEditTarget({ kind: 'color', item: color })}
-                          >
-                            <Icons.edit className='size-4' />
-                          </Button>
-                          <Button
-                            variant='ghost'
-                            size='icon'
-                            onClick={() => setDeleteTarget({ kind: 'color', item: color })}
-                          >
-                            <Icons.trash className='size-4' />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
 

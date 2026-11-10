@@ -64,6 +64,7 @@ export function AuthProvider({
       router.replace('/auth/sign-in');
       router.refresh();
     }
+    // oxlint-disable-next-line react/memo-dependencies -- both values are used in the callback
   }, [queryClient, router]);
 
   const value = useMemo<AuthContextValue>(

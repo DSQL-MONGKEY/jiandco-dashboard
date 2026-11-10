@@ -19,16 +19,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Icons } from '@/components/icons';
 import { FieldHint } from '@/components/form-field-hint';
-import {
-  categoryQueries,
-  colorQueries,
-  productMutations,
-  productQueries,
-  sizeQueries
-} from '../api/queries';
-import type { Product, VariantPayload } from '../api/types';
+import { categoryQueries, productMutations, productQueries, sizeQueries } from '../api/queries';
+import type { Product, ProductColorPayload, VariantPayload } from '../api/types';
 
 type VariantDraft = VariantPayload & { key: string };
+type ColorDraft = ProductColorPayload & { key: string };
 
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },
@@ -45,11 +40,20 @@ function emptyVariant(): VariantDraft {
   return {
     key: crypto.randomUUID(),
     size_id: '',
-    color_id: '',
+    product_color_id: '',
     sku: '',
     price: 0,
     stock: 0,
     is_active: true
+  };
+}
+
+function emptyColor(): ColorDraft {
+  return {
+    key: crypto.randomUUID(),
+    name: '',
+    hex_code: '#8B5E3C',
+    sort_order: 0
   };
 }
 
@@ -73,18 +77,20 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
     initialData?.badge_tone ?? 'light'
   );
   const [sortOrder, setSortOrder] = useState(initialData?.sort_order ?? 0);
+  const [colors, setColors] = useState<ColorDraft[]>([emptyColor()]);
   const [variants, setVariants] = useState<VariantDraft[]>([emptyVariant()]);
 
   const { data: categories = [] } = useQuery(categoryQueries.list());
   const { data: sizes = [] } = useQuery(sizeQueries.list());
-  const { data: colors = [] } = useQuery(colorQueries.list());
 
   const categoryOptions = [
     { value: 'none', label: 'No category' },
     ...categories.map((category) => ({ value: category.id, label: category.name }))
   ];
   const sizeOptions = sizes.map((size) => ({ value: size.id, label: size.name }));
-  const colorOptions = colors.map((color) => ({ value: color.id, label: color.name }));
+  const colorOptions = colors
+    .filter((color) => color.name.trim())
+    .map((color) => ({ value: color.key, label: color.name }));
 
   const createMutation = useMutation({
     ...productMutations.create(),
@@ -111,6 +117,12 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
   function updateVariant(key: string, patch: Partial<VariantDraft>) {
     setVariants((current) =>
       current.map((variant) => (variant.key === key ? { ...variant, ...patch } : variant))
+    );
+  }
+
+  function updateColor(key: string, patch: Partial<ColorDraft>) {
+    setColors((current) =>
+      current.map((color) => (color.key === key ? { ...color, ...patch } : color))
     );
   }
 
@@ -142,8 +154,26 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
       return;
     }
 
+    const validColors = colors
+      .filter((color) => color.name.trim())
+      .map(({ key, name, hex_code, sort_order }) => ({
+        id: key,
+        name: name.trim(),
+        hex_code: hex_code?.trim() || undefined,
+        sort_order
+      }));
+
+    if (validColors.length === 0) {
+      toast.error('Add at least one product color.');
+      return;
+    }
+    if (new Set(validColors.map((color) => color.name.toLowerCase())).size !== validColors.length) {
+      toast.error('Color names must be unique.');
+      return;
+    }
+
     const validVariants = variants
-      .filter((variant) => variant.size_id && variant.color_id && variant.sku.trim())
+      .filter((variant) => variant.size_id && variant.product_color_id && variant.sku.trim())
       .map(({ key: _key, ...variant }) => ({
         ...variant,
         sku: variant.sku.trim().toUpperCase()
@@ -153,12 +183,20 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
       toast.error('Add at least one complete variant with size, color, and SKU.');
       return;
     }
+    if (
+      validVariants.some(
+        (variant) => !validColors.some((color) => color.id === variant.product_color_id)
+      )
+    ) {
+      toast.error('Each variant must use a color defined for this product.');
+      return;
+    }
     if (validVariants.some((variant) => variant.price <= 0)) {
       toast.error('Each variant price must be greater than 0.');
       return;
     }
 
-    createMutation.mutate({ ...payload, variants: validVariants });
+    createMutation.mutate({ ...payload, colors: validColors, variants: validVariants });
   }
 
   return (
@@ -322,6 +360,94 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
           <div className='space-y-3'>
             <div className='flex items-center justify-between'>
               <div>
+                <h3 className='font-medium'>Colors</h3>
+                <p className='text-muted-foreground text-sm'>
+                  Define the colors available for this product. Upload one preview image per color
+                  after saving.
+                </p>
+              </div>
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                onClick={() => setColors((current) => [...current, emptyColor()])}
+              >
+                <Icons.add className='mr-1 size-4' />
+                Add color
+              </Button>
+            </div>
+            <div className='space-y-3'>
+              {colors.map((color) => (
+                <div
+                  key={color.key}
+                  className='grid gap-3 rounded-lg border p-3 md:grid-cols-[1fr_120px_100px_auto]'
+                >
+                  <div className='space-y-1'>
+                    <Label className='text-xs'>Color name</Label>
+                    <Input
+                      value={color.name}
+                      onChange={(event) => updateColor(color.key, { name: event.target.value })}
+                      placeholder='e.g. Cocoa'
+                    />
+                  </div>
+                  <div className='space-y-1'>
+                    <Label className='text-xs'>Hex</Label>
+                    <div className='flex gap-2'>
+                      <Input
+                        type='color'
+                        className='w-12 p-1'
+                        value={color.hex_code || '#8B5E3C'}
+                        onChange={(event) =>
+                          updateColor(color.key, { hex_code: event.target.value })
+                        }
+                      />
+                      <Input
+                        value={color.hex_code ?? ''}
+                        onChange={(event) =>
+                          updateColor(color.key, { hex_code: event.target.value })
+                        }
+                        placeholder='#8B5E3C'
+                      />
+                    </div>
+                  </div>
+                  <div className='space-y-1'>
+                    <Label className='text-xs'>Sort</Label>
+                    <Input
+                      type='number'
+                      value={color.sort_order ?? 0}
+                      onChange={(event) =>
+                        updateColor(color.key, { sort_order: Number(event.target.value) || 0 })
+                      }
+                    />
+                  </div>
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='icon'
+                    onClick={() =>
+                      setColors((current) =>
+                        current.length === 1
+                          ? current
+                          : current.filter((item) => item.key !== color.key)
+                      )
+                    }
+                  >
+                    <Icons.trash className='size-4' />
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <FieldHint>
+              Each color becomes a swatch on the public product page. Add at least one variant per
+              color.
+            </FieldHint>
+          </div>
+        )}
+
+        {!isEdit && (
+          <div className='space-y-3'>
+            <div className='flex items-center justify-between'>
+              <div>
                 <h3 className='font-medium'>Variants</h3>
                 <p className='text-muted-foreground text-sm'>
                   Add at least one complete size/color variant with SKU and price.
@@ -369,9 +495,9 @@ export function ProductForm({ initialData }: { initialData?: Product | null }) {
                     <Label className='text-xs'>Color</Label>
                     <Select
                       items={colorOptions}
-                      value={variant.color_id}
+                      value={variant.product_color_id}
                       onValueChange={(value) =>
-                        updateVariant(variant.key, { color_id: value ?? '' })
+                        updateVariant(variant.key, { product_color_id: value ?? '' })
                       }
                     >
                       <SelectTrigger>

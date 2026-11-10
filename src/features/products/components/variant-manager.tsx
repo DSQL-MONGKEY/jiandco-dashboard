@@ -44,13 +44,12 @@ import { Icons } from '@/components/icons';
 import { FieldHint } from '@/components/form-field-hint';
 import { formatDateTime } from '@/lib/format';
 import { Money } from '@/components/money';
-import { colorQueries, productMutations, productQueries, sizeQueries } from '../api/queries';
-import type { Color, Product, ProductVariant, Size } from '../api/types';
+import { productMutations, productQueries, sizeQueries } from '../api/queries';
+import type { Product, ProductColor, ProductVariant, Size } from '../api/types';
 
 export function VariantManager({ product }: { product: Product }) {
   const queryClient = useQueryClient();
   const { data: sizes = [] } = useQuery(sizeQueries.list());
-  const { data: colors = [] } = useQuery(colorQueries.list());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ProductVariant | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ProductVariant | null>(null);
@@ -190,7 +189,7 @@ export function VariantManager({ product }: { product: Product }) {
         productId={product.id}
         variant={editing}
         sizes={sizes}
-        colors={colors}
+        colors={product.colors ?? []}
         onCreate={(payload) => createMutation.mutate({ productId: product.id, payload })}
         onUpdate={(variantId, payload) =>
           updateMutation.mutate({ productId: product.id, variantId, payload })
@@ -244,10 +243,10 @@ function VariantDialog({
   productId: string;
   variant: ProductVariant | null;
   sizes: Size[];
-  colors: Color[];
+  colors: ProductColor[];
   onCreate: (payload: {
     size_id: string;
-    color_id: string;
+    product_color_id: string;
     sku: string;
     price: number;
     stock: number;
@@ -257,7 +256,7 @@ function VariantDialog({
     variantId: string,
     payload: {
       size_id: string;
-      color_id: string;
+      product_color_id: string;
       sku: string;
       price: number;
       is_active: boolean;
@@ -292,7 +291,7 @@ function VariantDialog({
     if (variant) {
       onUpdate(variant.id, {
         size_id: sizeId,
-        color_id: colorId,
+        product_color_id: colorId,
         sku: sku.trim().toUpperCase(),
         price,
         is_active: isActive
@@ -300,7 +299,7 @@ function VariantDialog({
     } else {
       onCreate({
         size_id: sizeId,
-        color_id: colorId,
+        product_color_id: colorId,
         sku: sku.trim().toUpperCase(),
         price,
         stock,

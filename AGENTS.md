@@ -29,7 +29,7 @@ src/
 ├── config/nav-config.ts     # permission-aware navigation
 ├── features/
 │   ├── auth/                # BFF client, auth context, permission guard
-│   ├── products/            # products, variants, images, stock, catalog settings
+│   ├── products/            # products, custom colors, variants, images, stock, catalog settings
 │   ├── customers/
 │   ├── orders/
 │   ├── accounting/

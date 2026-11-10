@@ -2,6 +2,7 @@ export type {
   Category,
   Color,
   Product,
+  ProductColor,
   ProductImage,
   ProductVariant,
   Size,
@@ -16,9 +17,16 @@ export type ProductFilters = {
   status?: string;
 };
 
+export type ProductColorPayload = {
+  id?: string;
+  name: string;
+  hex_code?: string;
+  sort_order?: number;
+};
+
 export type VariantPayload = {
   size_id: string;
-  color_id: string;
+  product_color_id: string;
   sku: string;
   price: number;
   stock: number;
@@ -39,6 +47,7 @@ export type ProductPayload = {
   badge?: string;
   badge_tone?: 'light' | 'accent';
   sort_order?: number;
+  colors?: ProductColorPayload[];
   variants?: VariantPayload[];
 };
 

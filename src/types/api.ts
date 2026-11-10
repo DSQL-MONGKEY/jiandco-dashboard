@@ -87,6 +87,18 @@ export type Color = {
   updated_at: string;
 };
 
+export type ProductColor = {
+  id: ID;
+  product_id: ID;
+  name: string;
+  hex_code: string;
+  image_key: string;
+  image_url: string;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type ProductImage = {
   id: ID;
   object_key: string;
@@ -101,7 +113,7 @@ export type ProductVariant = {
   id: ID;
   product_id: ID;
   size: Size;
-  color: Color;
+  color: ProductColor;
   sku: string;
   price: number;
   stock: number;
@@ -126,6 +138,7 @@ export type Product = {
   sort_order: number;
   created_by_id: ID | null;
   images: ProductImage[];
+  colors: ProductColor[];
   variants: ProductVariant[];
   created_at: string;
   updated_at: string;

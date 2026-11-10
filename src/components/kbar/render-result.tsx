@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components -- kbar render callback
 import { KBarResults, useMatches } from 'kbar';
 import ResultItem from './result-item';
 

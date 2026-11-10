@@ -1,3 +1,4 @@
+// oxlint-disable react/no-unstable-nested-components -- calendar component slots
 'use client';
 
 import * as React from 'react';

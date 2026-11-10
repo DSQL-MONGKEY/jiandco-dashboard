@@ -3,11 +3,14 @@ import {
   createCategory,
   createColor,
   createProduct,
+  createProductColor,
   createSize,
   createVariant,
   deleteCategory,
   deleteColor,
   deleteProduct,
+  deleteProductColor,
+  deleteProductColorImage,
   deleteProductImage,
   deleteSize,
   deleteVariant,
@@ -15,6 +18,7 @@ import {
   getCategories,
   getColors,
   getProduct,
+  getProductColors,
   getProducts,
   getSizes,
   getStockMovements,
@@ -23,15 +27,18 @@ import {
   updateCategory,
   updateColor,
   updateProduct,
+  updateProductColor,
   updateSize,
   updateVariant,
   updateVariantStock,
+  uploadProductColorImage,
   uploadProductImages
 } from './service';
 import type {
   CategoryPayload,
   ColorPayload,
   ProductFilters,
+  ProductColorPayload,
   ProductPayload,
   SizePayload,
   StockUpdatePayload,
@@ -55,6 +62,15 @@ export const productQueries = {
     queryOptions({
       queryKey: [...productQueries.all(), 'movements', productId, variantId, page] as const,
       queryFn: () => getStockMovements(productId, variantId, page)
+    })
+};
+
+export const productColorQueries = {
+  all: (productId: string) => ['product-colors', productId] as const,
+  list: (productId: string) =>
+    queryOptions({
+      queryKey: [...productColorQueries.all(productId), 'list'] as const,
+      queryFn: () => getProductColors(productId)
     })
 };
 
@@ -103,6 +119,46 @@ export const productMutations = {
         updateProduct(id, payload)
     }),
   delete: () => mutationOptions({ mutationFn: (id: string) => deleteProduct(id) }),
+
+  createColor: () =>
+    mutationOptions({
+      mutationFn: ({ productId, payload }: { productId: string; payload: ProductColorPayload }) =>
+        createProductColor(productId, payload)
+    }),
+  updateColor: () =>
+    mutationOptions({
+      mutationFn: ({
+        productId,
+        colorId,
+        payload
+      }: {
+        productId: string;
+        colorId: string;
+        payload: ProductColorPayload;
+      }) => updateProductColor(productId, colorId, payload)
+    }),
+  deleteColor: () =>
+    mutationOptions({
+      mutationFn: ({ productId, colorId }: { productId: string; colorId: string }) =>
+        deleteProductColor(productId, colorId)
+    }),
+  uploadColorImage: () =>
+    mutationOptions({
+      mutationFn: ({
+        productId,
+        colorId,
+        file
+      }: {
+        productId: string;
+        colorId: string;
+        file: File;
+      }) => uploadProductColorImage(productId, colorId, file)
+    }),
+  deleteColorImage: () =>
+    mutationOptions({
+      mutationFn: ({ productId, colorId }: { productId: string; colorId: string }) =>
+        deleteProductColorImage(productId, colorId)
+    }),
   uploadImages: () =>
     mutationOptions({
       mutationFn: ({ productId, files }: { productId: string; files: File[] }) =>
