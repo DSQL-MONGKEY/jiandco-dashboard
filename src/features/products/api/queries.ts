@@ -147,12 +147,14 @@ export const productMutations = {
       mutationFn: ({
         productId,
         colorId,
-        file
+        file,
+        onProgress
       }: {
         productId: string;
         colorId: string;
         file: File;
-      }) => uploadProductColorImage(productId, colorId, file)
+        onProgress?: (percent: number) => void;
+      }) => uploadProductColorImage(productId, colorId, file, onProgress)
     }),
   deleteColorImage: () =>
     mutationOptions({
@@ -161,8 +163,15 @@ export const productMutations = {
     }),
   uploadImages: () =>
     mutationOptions({
-      mutationFn: ({ productId, files }: { productId: string; files: File[] }) =>
-        uploadProductImages(productId, files)
+      mutationFn: ({
+        productId,
+        files,
+        onProgress
+      }: {
+        productId: string;
+        files: File[];
+        onProgress?: (percent: number) => void;
+      }) => uploadProductImages(productId, files, onProgress)
     }),
   deleteImage: () =>
     mutationOptions({

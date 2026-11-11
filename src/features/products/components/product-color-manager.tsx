@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,8 @@ export function ProductColorManager({ product }: { product: Product }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadTargetRef = useRef<ProductColor | null>(null);
   const [uploadTarget, setUploadTarget] = useState<ProductColor | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadingColorId, setUploadingColorId] = useState<string | null>(null);
   const [editTarget, setEditTarget] = useState<EditTarget>(null);
   const [deleteTarget, setDeleteTarget] = useState<ProductColor | null>(null);
 
@@ -77,7 +80,11 @@ export function ProductColorManager({ product }: { product: Product }) {
       setUploadTarget(null);
       invalidate();
     },
-    onError: (error) => toast.error(error.message)
+    onError: (error) => toast.error(error.message),
+    onSettled: () => {
+      setUploadingColorId(null);
+      setUploadProgress(null);
+    }
   });
 
   const deleteImageMutation = useMutation({
@@ -96,10 +103,13 @@ export function ProductColorManager({ product }: { product: Product }) {
     if (file.size > MAX_IMAGE_SIZE) {
       toast.error(`Color preview must be at most ${MAX_UPLOAD_LABEL}.`);
     } else {
+      setUploadingColorId(target.id);
+      setUploadProgress(0);
       uploadMutation.mutate({
         productId: product.id,
         colorId: target.id,
-        file
+        file,
+        onProgress: setUploadProgress
       });
     }
     if (inputRef.current) inputRef.current.value = '';
@@ -133,6 +143,20 @@ export function ProductColorManager({ product }: { product: Product }) {
           className='hidden'
           onChange={(event) => onFileSelected(event.target.files)}
         />
+
+        {uploadingColorId && uploadProgress !== null && (
+          <div className='mb-4 space-y-2'>
+            <div className='flex items-center justify-between text-xs'>
+              <span>
+                {uploadProgress < 100
+                  ? `Uploading ${uploadTarget?.name ?? 'color preview'}...`
+                  : 'Processing preview...'}
+              </span>
+              <span className='text-muted-foreground tabular-nums'>{uploadProgress}%</span>
+            </div>
+            <Progress value={uploadProgress} />
+          </div>
+        )}
 
         {colors.length === 0 ? (
           <div className='border-muted text-muted-foreground flex h-28 items-center justify-center rounded-lg border border-dashed text-sm'>

@@ -33,15 +33,21 @@ export function refreshAuthTokens(refreshToken: string): Promise<AuthTokens | nu
   if (existing) return existing;
 
   const request = (async () => {
-    const response = await fetch(`${BACKEND_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
-      cache: 'no-store'
-    });
-    const payload = await response.json().catch(() => null);
-    if (!response.ok || !payload?.success) return null;
-    return parseTokens(payload.data as BackendRefreshData);
+    try {
+      const response = await fetch(`${BACKEND_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+        cache: 'no-store',
+        signal: AbortSignal.timeout(120_000)
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload?.success) return null;
+      return parseTokens(payload.data as BackendRefreshData);
+    } catch (error) {
+      console.error('[backend] refresh failed', error);
+      return null;
+    }
   })().finally(() => {
     refreshRequests.delete(refreshToken);
   });
@@ -63,7 +69,8 @@ export async function backendFetch(
   return fetch(`${BACKEND_URL}${path}`, {
     ...init,
     headers,
-    cache: 'no-store'
+    cache: 'no-store',
+    signal: init.signal ?? AbortSignal.timeout(120_000)
   });
 }
 
@@ -82,14 +89,24 @@ export async function backendProxy(
     );
   }
 
-  let response = await backendFetch(path, init, accessToken);
+  let response: Response;
   let tokens: AuthTokens | null = null;
 
-  if (response.status === 401 && refreshToken) {
-    tokens = await refreshAuthTokens(refreshToken);
-    if (tokens) {
-      response = await backendFetch(path, init, tokens.accessToken);
+  try {
+    response = await backendFetch(path, init, accessToken);
+
+    if (response.status === 401 && refreshToken) {
+      tokens = await refreshAuthTokens(refreshToken);
+      if (tokens) {
+        response = await backendFetch(path, init, tokens.accessToken);
+      }
     }
+  } catch (error) {
+    console.error(`[backend] proxy request failed: ${path}`, error);
+    return NextResponse.json(
+      { success: false, code: 502, message: 'backend API is unreachable' },
+      { status: 502 }
+    );
   }
 
   const body = await response.arrayBuffer();

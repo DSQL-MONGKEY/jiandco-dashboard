@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Icons } from '@/components/icons';
 import { mediaUrl } from '@/lib/media';
 import { MAX_IMAGE_SIZE, MAX_UPLOAD_LABEL } from '@/lib/upload';
@@ -17,6 +18,7 @@ export function ImageManager({ product }: { product: Product }) {
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState<number | null>(null);
 
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: productQueries.all() });
@@ -29,7 +31,10 @@ export function ImageManager({ product }: { product: Product }) {
       invalidate();
     },
     onError: (error) => toast.error(error.message),
-    onSettled: () => setUploading(false)
+    onSettled: () => {
+      setUploading(false);
+      setProgress(null);
+    }
   });
 
   const deleteMutation = useMutation({
@@ -60,7 +65,12 @@ export function ImageManager({ product }: { product: Product }) {
       return;
     }
     setUploading(true);
-    uploadMutation.mutate({ productId: product.id, files: selected });
+    setProgress(0);
+    uploadMutation.mutate({
+      productId: product.id,
+      files: selected,
+      onProgress: setProgress
+    });
     if (inputRef.current) inputRef.current.value = '';
   }
 
@@ -94,6 +104,15 @@ export function ImageManager({ product }: { product: Product }) {
         </div>
       </CardHeader>
       <CardContent>
+        {uploading && progress !== null && (
+          <div className='mb-4 space-y-2'>
+            <div className='flex items-center justify-between text-xs'>
+              <span>{progress < 100 ? 'Uploading images...' : 'Processing images...'}</span>
+              <span className='text-muted-foreground tabular-nums'>{progress}%</span>
+            </div>
+            <Progress value={progress} />
+          </div>
+        )}
         {product.images.length === 0 ? (
           <div className='border-muted text-muted-foreground flex h-32 items-center justify-center rounded-lg border border-dashed text-sm'>
             No images uploaded yet.

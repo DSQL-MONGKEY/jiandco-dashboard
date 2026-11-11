@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/api-client';
+import { uploadWithProgress } from '@/lib/upload-client';
 import { toQueryString } from '@/lib/query-string';
 import type { CatalogSettings, Paginated, StockMovement } from '@/types/api';
 import type {
@@ -85,13 +86,19 @@ export function deleteProductColor(productId: string, colorId: string) {
   });
 }
 
-export function uploadProductColorImage(productId: string, colorId: string, file: File) {
+export function uploadProductColorImage(
+  productId: string,
+  colorId: string,
+  file: File,
+  onProgress?: (percent: number) => void
+) {
   const formData = new FormData();
   formData.append('image', file);
-  return apiClient<ProductColor>(`/products/${productId}/colors/${colorId}/image`, {
-    method: 'POST',
-    body: formData
-  });
+  return uploadWithProgress<ProductColor>(
+    `/products/${productId}/colors/${colorId}/image`,
+    formData,
+    onProgress
+  );
 }
 
 export function deleteProductColorImage(productId: string, colorId: string) {
@@ -100,13 +107,14 @@ export function deleteProductColorImage(productId: string, colorId: string) {
   });
 }
 
-export function uploadProductImages(productId: string, files: File[]) {
+export function uploadProductImages(
+  productId: string,
+  files: File[],
+  onProgress?: (percent: number) => void
+) {
   const formData = new FormData();
   files.forEach((file) => formData.append('images', file));
-  return apiClient<ProductImage[]>(`/products/${productId}/images`, {
-    method: 'POST',
-    body: formData
-  });
+  return uploadWithProgress<ProductImage[]>(`/products/${productId}/images`, formData, onProgress);
 }
 
 export function deleteProductImage(productId: string, imageId: string) {
